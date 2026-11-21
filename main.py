@@ -217,6 +217,20 @@ def draw_stamp_page(base):
     d.text((PAGE_W - 66, 32), "PAGE 12", font=font(SANS_B, 9), fill=INK_SOFT)
     d.line([30, 56, PAGE_W - 30, 56], fill=RULE, width=1)
 
+    # faint coat-of-arms watermark filling the middle of the page
+    wm = Image.new("RGBA", (PAGE_W, PAGE_H), (0, 0, 0, 0))
+    wd = ImageDraw.Draw(wm)
+    wcx, wcy, wr = PAGE_W // 2, 440, 120
+    wd.ellipse([wcx - wr, wcy - wr, wcx + wr, wcy + wr], outline=(146, 110, 42, 26), width=4)
+    wd.ellipse([wcx - wr + 10, wcy - wr + 10, wcx + wr - 10, wcy + wr - 10],
+               outline=(146, 110, 42, 26), width=2)
+    wd.line([wcx - 60, wcy + 55, wcx + 60, wcy - 55], fill=(146, 110, 42, 26), width=8)
+    wd.line([wcx - 60, wcy - 55, wcx + 60, wcy + 55], fill=(146, 110, 42, 26), width=8)
+    wd.ellipse([wcx - 22, wcy - 8, wcx + 22, wcy + 44], fill=(18, 92, 96, 26))
+    wd.polygon([(wcx, wcy - 52), (wcx - 22, wcy - 8), (wcx + 22, wcy - 8)], fill=(18, 92, 96, 26))
+    wm = wm.rotate(-12, resample=Image.BICUBIC, center=(wcx, wcy))
+    page.alpha_composite(wm)
+
     PURPLE = (104, 52, 148, 210)
     RUST = (166, 58, 32, 210)
     TEAL_I = (14, 110, 112, 210)
